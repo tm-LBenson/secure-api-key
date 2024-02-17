@@ -33,25 +33,23 @@
         <pre><code>const express = require('express');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(cors()); // Enable CORS if needed
+const PORT = process.env.PORT;
+app.use(cors());
 app.get('/api/key', (req, res) => {
-    // Check for a secret in the query string for basic security
     if (req.query.secret !== process.env.SECRET) {
         return res.status(401).send('Unauthorized');
     }
-    res.send(process.env.API_KEY); // Send the API key
+    res.send(process.env.API_KEY);
 });
 
-app.listen(PORT, () => console.log(\`Server running on port \${PORT}\`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
         </code></pre>
     </div>
 
     <div class="step">
         <h2>Step 5: Deploy to Render.com</h2>
         <ol>
-            <li>Push your project to a Git repository (GitHub, GitLab, or Bitbucket).</li>
+            <li>Push your project to a Git repository.</li>
             <li>Sign up or log in to <a href="https://render.com">Render.com</a>.</li>
             <li>Create a new Web Service and connect your Git repository.</li>
             <li>Set the build command to <code>npm install</code> and the start command to <code>node app.js</code>.</li>
