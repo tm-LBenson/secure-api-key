@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure API Key Deployment Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Secure API Key Deployment Guide</h1>
+    <p>This guide will walk you through creating a Node.js application that securely stores your API key using Render.com's environment variables.</p>
+
+    <div class="step">
+        <h2>Step 1: Install Node.js</h2>
+        <p>Download and install Node.js from <a href="https://nodejs.org/">nodejs.org</a>. This will also install npm, which is needed to manage your project dependencies.</p>
+    </div>
+
+    <div class="step">
+        <h2>Step 2: Initialize Your Project</h2>
+        <p>Create a new directory for your project and navigate into it using your terminal. Then, initialize a new Node.js project:</p>
+        <code>npm init -y</code>
+    </div>
+
+    <div class="step">
+        <h2>Step 3: Install Dependencies</h2>
+        <p>Install Express, dotenv, and CORS (if you anticipate needing to handle cross-origin requests):</p>
+        <code>npm install express dotenv cors</code>
+    </div>
+
+    <div class="step">
+        <h2>Step 4: Create Your Server</h2>
+        <p>Create a file named <code>app.js</code> and add your server code. Here's a simple example:</p>
+        <pre><code>const express = require('express');
+const cors = require('cors');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors()); // Enable CORS if needed
+app.get('/api/key', (req, res) => {
+    // Check for a secret in the query string for basic security
+    if (req.query.secret !== process.env.SECRET) {
+        return res.status(401).send('Unauthorized');
+    }
+    res.send(process.env.API_KEY); // Send the API key
+});
+
+app.listen(PORT, () => console.log(\`Server running on port \${PORT}\`));
+        </code></pre>
+    </div>
+
+    <div class="step">
+        <h2>Step 5: Deploy to Render.com</h2>
+        <ol>
+            <li>Push your project to a Git repository (GitHub, GitLab, or Bitbucket).</li>
+            <li>Sign up or log in to <a href="https://render.com">Render.com</a>.</li>
+            <li>Create a new Web Service and connect your Git repository.</li>
+            <li>Set the build command to <code>npm install</code> and the start command to <code>node app.js</code>.</li>
+            <li>Add environment variables for <code>API_KEY</code> and <code>SECRET</code> in the Render.com service settings.</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h2>Step 6: Access Your Secure API Key</h2>
+        <p>To access your API key, make a GET request to the deployed service's URL with the correct secret query parameter:</p>
+        <code>https://your-service-url.render.com/api/key?secret=yourSecretValue</code>
+    </div>
+
+    <p>By following these steps, you'll have a secure, deployed Node.js application that stores and provides your API key only when the correct secret is provided.</p>
+</body>
+</html>
